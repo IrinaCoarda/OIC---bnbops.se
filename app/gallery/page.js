@@ -154,7 +154,7 @@ function makeHref(path, lang) {
 
 function normalizeUrl(url) {
   if (!url) return null;
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) {
+  if (url.startsWith('https://') || url.startsWith('https://') || url.startsWith('/')) {
     return url;
   }
   return `/${url}`;
