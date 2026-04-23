@@ -1,11 +1,8 @@
 import './globals.css';
 import { LanguageProvider } from '../components/LanguageProvider';
 
-export const metadata = {
-  title: 'bnbops.se | Airbnb Location Ready',
-  description:
-    'We prepare properties in Stockholm and Uppsala to become Airbnb-ready, guest-ready and launch-ready.',
-};
+export const metadata = { metadataBase: new URL('https://www.bnbops.se'), alternates: { canonical: '/', }, title: 'bnbops.se | Airbnb Location Ready', description: 'We prepare properties in Stockholm and Uppsala to become Airbnb-ready, guest-ready and launch-ready.', };
+
 
 export default function RootLayout({ children }) {
   return (
