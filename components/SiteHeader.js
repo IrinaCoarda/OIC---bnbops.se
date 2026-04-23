@@ -1,10 +1,10 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import LanguageToggle from './LanguageToggle';
-import { useLanguage } from './LanguageProvider';
 
 const labels = {
   en: {
@@ -33,15 +33,18 @@ const navItems = [
   { href: '/contact', key: 'contact' },
 ];
 
-export default function SiteHeader() {
+function makeHref(path, lang) {
+  return lang === 'sv' ? `${path}?lang=sv` : path;
+}
+
+export default function SiteHeader({ lang = 'en' }) {
   const pathname = usePathname();
-  const { language } = useLanguage();
-  const t = labels[language];
+  const t = labels[lang];
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-5 lg:px-8">
-        <Link href="/" className="flex shrink-0 items-center">
+        <Link href={makeHref('/', lang)} className="flex shrink-0 items-center">
           <Image
             src="/bnbops-logo.png"
             alt="bnbops.se"
@@ -59,7 +62,7 @@ export default function SiteHeader() {
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={makeHref(item.href, lang)}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                   active
                     ? 'bg-white text-slate-950'
@@ -73,10 +76,12 @@ export default function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <LanguageToggle />
+          <Suspense fallback={null}>
+            <LanguageToggle />
+          </Suspense>
 
           <Link
-            href="/contact"
+            href={makeHref('/contact', lang)}
             className="hidden rounded-full bg-white px-5 py-2.5 text-sm font-medium text-slate-950 transition hover:bg-slate-200 md:inline-flex"
           >
             {t.cta}

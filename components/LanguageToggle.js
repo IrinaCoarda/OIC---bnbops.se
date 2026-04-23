@@ -1,21 +1,38 @@
 'use client';
 
-import { useLanguage } from './LanguageProvider';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function LanguageToggle() {
-  const { language, setLanguage, mounted } = useLanguage();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  if (!mounted) return null;
+  const currentLang = searchParams.get('lang') === 'sv' ? 'sv' : 'en';
+
+  function changeLanguage(lang) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (lang === 'sv') {
+      params.set('lang', 'sv');
+    } else {
+      params.delete('lang');
+    }
+
+    const query = params.toString();
+    const nextUrl = query ? `${pathname}?${query}` : pathname;
+
+    router.push(nextUrl);
+  }
 
   return (
-    <div className="inline-flex items-center rounded-full border border-white/15 bg-white/5 p-1 text-sm">
+    <div className="flex items-center rounded-full border border-white/10 bg-white/5 p-1">
       <button
         type="button"
-        onClick={() => setLanguage('en')}
-        className={`rounded-full px-3 py-1.5 transition ${
-          language === 'en'
+        onClick={() => changeLanguage('en')}
+        className={`rounded-full px-3 py-1.5 text-sm transition ${
+          currentLang === 'en'
             ? 'bg-white text-slate-950'
-            : 'text-white hover:bg-white/10'
+            : 'text-slate-300 hover:text-white'
         }`}
       >
         EN
@@ -23,11 +40,11 @@ export default function LanguageToggle() {
 
       <button
         type="button"
-        onClick={() => setLanguage('sv')}
-        className={`rounded-full px-3 py-1.5 transition ${
-          language === 'sv'
+        onClick={() => changeLanguage('sv')}
+        className={`rounded-full px-3 py-1.5 text-sm transition ${
+          currentLang === 'sv'
             ? 'bg-white text-slate-950'
-            : 'text-white hover:bg-white/10'
+            : 'text-slate-300 hover:text-white'
         }`}
       >
         SV
