@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
+import PricingCalculator from '../../components/PricingCalculator';
 
 const content = {
   en: {
@@ -63,6 +64,38 @@ const content = {
       loss:
         'A weak initial setup often leads to lower ratings and slower booking momentum. Fixing it later is usually more expensive.',
     },
+    calculator: {
+      eyebrow: 'Estimate',
+      title: 'Get a quick estimate',
+      text: 'Use this guided calculator to see a likely package and a starting price range. Final pricing is confirmed after a property review.',
+      fields: {
+        city: 'City',
+        propertyType: 'Property type',
+        rooms: 'Rooms',
+        furnished: 'Furnished',
+        condition: 'Current condition',
+        photoSupport: 'Need photo & listing support?',
+        opsPlanning: 'Need linen & operating-flow planning?',
+      },
+      options: {
+        city: ['Stockholm', 'Uppsala'],
+        propertyType: ['Apartment', 'Townhouse', 'Villa'],
+        rooms: ['1', '2', '3', '4+'],
+        furnished: ['Yes', 'Partly', 'No'],
+        condition: ['Good', 'Needs light improvement', 'Needs more preparation'],
+        yesNo: ['Yes', 'No'],
+      },
+      result: {
+        recommended: 'Recommended package',
+        estimate: 'Estimated starting range',
+        note:
+          'This is a guided estimate, not a final quote. The final scope is confirmed after review.',
+        validation:
+          'Based on your inputs, most properties in this category require a structured setup to perform well.',
+        ctaPrimary: 'Confirm my setup plan',
+        ctaSecondary: 'Request detailed review',
+      },
+    },
     factors: {
       title: 'What affects final price',
       items: [
@@ -81,6 +114,23 @@ const content = {
         {
           title: 'Support level requested',
           text: 'Photo planning, listing support and operating-flow planning increase the preparation scope.',
+        },
+      ],
+    },
+    faq: {
+      title: 'Pricing FAQ',
+      items: [
+        {
+          q: 'Is the calculator a final quote?',
+          a: 'No. It gives a practical estimate and recommended package. Final pricing is confirmed after reviewing the property.',
+        },
+        {
+          q: 'Can you prepare larger properties?',
+          a: 'Yes. Villas, larger apartments and multi-unit setups can be quoted separately.',
+        },
+        {
+          q: 'Can I start with one package and upgrade later?',
+          a: 'Yes. The property review helps define the right starting point, and the scope can be adjusted if needed.',
         },
       ],
     },
@@ -152,6 +202,38 @@ const content = {
       loss:
         'En svag initial setup leder ofta till lägre betyg och långsammare bokningsflöde. Att rätta till det i efterhand blir oftast dyrare.',
     },
+    calculator: {
+      eyebrow: 'Uppskattning',
+      title: 'Få en snabb uppskattning',
+      text: 'Använd denna guidande kalkylator för att se ett troligt paket och ett uppskattat startpris. Slutpris bekräftas efter en bostadsbedömning.',
+      fields: {
+        city: 'Stad',
+        propertyType: 'Typ av bostad',
+        rooms: 'Antal rum',
+        furnished: 'Möblerad',
+        condition: 'Nuvarande skick',
+        photoSupport: 'Behöver du stöd för bilder och annons?',
+        opsPlanning: 'Behöver du planering för linne och driftflöde?',
+      },
+      options: {
+        city: ['Stockholm', 'Uppsala'],
+        propertyType: ['Lägenhet', 'Radhus', 'Villa'],
+        rooms: ['1', '2', '3', '4+'],
+        furnished: ['Ja', 'Delvis', 'Nej'],
+        condition: ['Bra', 'Behöver lätt förbättring', 'Behöver mer förberedelse'],
+        yesNo: ['Ja', 'Nej'],
+      },
+      result: {
+        recommended: 'Rekommenderat paket',
+        estimate: 'Uppskattat startintervall',
+        note:
+          'Detta är en vägledande uppskattning, inte en slutlig offert. Slutlig omfattning bekräftas efter genomgång.',
+        validation:
+          'Baserat på dina val behöver de flesta bostäder i denna kategori en strukturerad setup för att prestera väl.',
+        ctaPrimary: 'Bekräfta min setup-plan',
+        ctaSecondary: 'Begär detaljerad bedömning',
+      },
+    },
     factors: {
       title: 'Vad påverkar slutpriset',
       items: [
@@ -170,6 +252,23 @@ const content = {
         {
           title: 'Nivå på önskat stöd',
           text: 'Planering för bilder, annonsstöd och driftflöde ökar omfattningen av förberedelsen.',
+        },
+      ],
+    },
+    faq: {
+      title: 'Prisfrågor',
+      items: [
+        {
+          q: 'Är kalkylatorn en slutlig offert?',
+          a: 'Nej. Den ger en praktisk uppskattning och rekommenderat paket. Slutpris bekräftas efter genomgång av bostaden.',
+        },
+        {
+          q: 'Kan ni förbereda större bostäder?',
+          a: 'Ja. Villor, större lägenheter och flera enheter kan offereras separat.',
+        },
+        {
+          q: 'Kan jag börja med ett paket och uppgradera senare?',
+          a: 'Ja. Bostadsbedömningen hjälper till att definiera rätt startnivå, och omfattningen kan justeras vid behov.',
         },
       ],
     },
@@ -208,7 +307,6 @@ export default async function PricingPage({ searchParams }) {
   const params = await searchParams;
   const lang = params?.lang === 'sv' ? 'sv' : 'en';
   const t = content[lang];
-
   const packages = [t.cards.start, t.cards.launch, t.cards.premium];
 
   return (
@@ -301,17 +399,36 @@ export default async function PricingPage({ searchParams }) {
         </div>
       </section>
 
-      <section className="border-y border-white/10 bg-white/5 px-6 py-20 lg:px-8">
+      <PricingCalculator lang={lang} content={t} />
+
+      <section className="px-6 py-20 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <SectionTitle title={t.factors.title} />
           <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {t.factors.items.map((item) => (
               <div
                 key={item.title}
-                className="rounded-[28px] border border-white/10 bg-slate-950/60 p-8"
+                className="rounded-[28px] border border-white/10 bg-white/5 p-8"
               >
                 <h3 className="text-xl font-semibold text-white">{item.title}</h3>
                 <p className="mt-4 leading-7 text-slate-300">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 bg-white/5 px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <SectionTitle title={t.faq.title} />
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {t.faq.items.map((item) => (
+              <div
+                key={item.q}
+                className="rounded-[28px] border border-white/10 bg-slate-950/60 p-8"
+              >
+                <h3 className="text-xl font-semibold text-white">{item.q}</h3>
+                <p className="mt-4 leading-7 text-slate-300">{item.a}</p>
               </div>
             ))}
           </div>
