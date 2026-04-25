@@ -1,5 +1,6 @@
 import './globals.css';
 import { LanguageProvider } from '../components/LanguageProvider';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = { metadataBase: new URL('https://www.bnbops.se'), alternates: { canonical: '/', }, title: 'bnbops.se | Airbnb Location Ready', description: 'We prepare properties in Stockholm and Uppsala to become Airbnb-ready, guest-ready and launch-ready.', };
 
@@ -9,6 +10,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="bg-slate-950 text-white antialiased">
         <LanguageProvider>{children}</LanguageProvider>
+        <Analytics />
       </body>
     </html>
   );
